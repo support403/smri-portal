@@ -11,7 +11,12 @@ exports.handler = async function (event, context) {
     return { statusCode: 200, headers, body: "" };
   }
 
-  const store = getStore({ name: "smri-config", consistency: "strong" });
+  const store = getStore({
+    name: "smri-config",
+    consistency: "strong",
+    siteID: process.env.NETLIFY_SITE_ID,
+    token: process.env.NETLIFY_TOKEN,
+  });
 
   // GET: 設定を読み込む
   if (event.httpMethod === "GET") {
