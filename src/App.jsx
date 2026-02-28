@@ -331,8 +331,28 @@ function VideoCard({ video, watched, onToggle, config }) {
 // メインポータル
 // ============================================================
 function Portal({ roomKey, onLogout }) {
-  var config = MOCK_CONFIG;
-  var room = config.rooms[roomKey];
+  var [config, setConfig] = useState(MOCK_CONFIG);
+  var [configLoaded, setConfigLoaded] = useState(false);
+
+  // 起動時にサーバーから設定を読み込む
+  useState(() => {
+    fetch("/api/config")
+      .then(r => r.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          setConfig(prev => ({
+            ...prev,
+            ...data,
+            rooms: { ...prev.rooms, ...(data.rooms || {}) },
+            fixedUrls: { ...prev.fixedUrls, ...(data.fixedUrls || {}) },
+          }));
+        }
+        setConfigLoaded(true);
+      })
+      .catch(() => setConfigLoaded(true));
+  }, []);
+
+  var room = config.rooms[roomKey] || MOCK_CONFIG.rooms[roomKey];
   var isPost = config.phase === "post";
   var localName = room.locationName;
   var roomLabel = roomKey === "local" ? (localName ? localName + "開催" : "地方開催") : room.label;
