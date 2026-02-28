@@ -387,7 +387,7 @@ function Portal({ roomKey, onLogout }) {
   var progress = Math.round((watched.length / totalChapters) * 100);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "sans-serif", color: C.text }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "sans-serif", color: C.text, overflowX: "hidden" }}>
 
       {/* ヘッダー */}
       <div style={{ background: C.white, borderBottom: "3px solid " + C.navy, position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(26,39,68,0.08)" }}>
@@ -1005,7 +1005,7 @@ function AdminPanel({ onLogout }) {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "sans-serif", color: C.text }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "sans-serif", color: C.text, overflowX: "hidden" }}>
       {/* ヘッダー */}
       <div style={{ background: C.navy, padding: "0 32px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, color: C.white }}>
