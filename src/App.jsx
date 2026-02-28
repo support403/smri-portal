@@ -38,7 +38,7 @@ const MOCK_CONFIG = {
 
 const VIDEOS = [
   {
-    id: "v1", title: "実務従事マインドセット", instructor: "伊勢田",
+    id: "v1", thumbnail: "/thumb_v1.png", title: "実務従事マインドセット", instructor: "伊勢田",
     chapters: [
       { title: "試験で高得点≠実務で高成果", url: "https://youtu.be/TwQogFMcQpA" },
       { title: "支援先以上の専門家になれるか", url: "https://youtu.be/hGfgO79MJ5I" },
@@ -48,7 +48,7 @@ const VIDEOS = [
     materialUrl: null,
   },
   {
-    id: "v2", title: "課題解決型ヒアリング", instructor: "吉野",
+    id: "v2", thumbnail: "/thumb_v2.png", title: "課題解決型ヒアリング", instructor: "吉野",
     chapters: [
       { title: "課題解決できないヒアリング6選", url: "https://youtu.be/apV9uoMr7f4" },
       { title: "不適切な3大思考", url: "https://youtu.be/knpnB593Ygc" },
@@ -58,7 +58,7 @@ const VIDEOS = [
     materialUrl: "https://drive.google.com/file/d/1sPoKlmlE8GFozcaIWS6fuPu-DShiicWh/view?usp=sharing",
   },
   {
-    id: "v3", title: "経営支援レポート作成のポイント", instructor: "吉野",
+    id: "v3", thumbnail: "/thumb_v3.png", title: "経営支援レポート作成のポイント", instructor: "吉野",
     chapters: [
       { title: "経営支援レポートの役割", url: "https://youtu.be/FCOgbRNM39A" },
       { title: "良くないレポート・良いレポート", url: "https://youtu.be/W8icSYv1en4" },
@@ -68,7 +68,7 @@ const VIDEOS = [
     materialUrl: "https://drive.google.com/file/d/1Z603kc9P_DjwabgteCzqHobjQNgKY2Pe/view?usp=sharing",
   },
   {
-    id: "v4", title: "AI活用の方法とポイント", instructor: "吉野",
+    id: "v4", thumbnail: "/thumb_v4.png", title: "AI活用の方法とポイント", instructor: "吉野",
     chapters: [
       { title: "AI活用における重要ポイント", url: "https://youtu.be/oKNAqVOjNQs?si=5NDt7pQtwKO-WmzE" },
       { title: "AIリサーチの活用方法", url: "https://youtu.be/crm32lN_0I8" },
