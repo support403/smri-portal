@@ -198,16 +198,34 @@ function LoginScreen({ onLogin, onBack }) {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
+  const [serverConfig, setServerConfig] = useState(null);
 
-  var localName = MOCK_CONFIG.rooms.local.locationName;
+  useEffect(() => {
+    fetch("/.netlify/functions/config")
+      .then(r => r.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) setServerConfig(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  var activeConfig = serverConfig || MOCK_CONFIG;
+  var localName = (activeConfig.rooms && activeConfig.rooms.local || {}).locationName;
   var rooms = [
-    { key: "tokyo", label: "東京会場" },
+    { key: "tokyo", label: (activeConfig.rooms && activeConfig.rooms.tokyo || {}).label || "東京会場" },
     { key: "local", label: localName ? localName + "開催" : "地方開催" },
-    { key: "online", label: "オンライン" },
+    { key: "online", label: (activeConfig.rooms && activeConfig.rooms.online || {}).label || "オンライン" },
   ];
 
+  if (!serverConfig) return (
+    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", color: C.muted, fontSize: 14 }}>
+      読み込み中...
+    </div>
+  );
+
   function handleLogin() {
-    if (pw === MOCK_CONFIG.rooms[selectedRoom].password) {
+    var correctPw = (activeConfig.rooms[selectedRoom] || {}).password || MOCK_CONFIG.rooms[selectedRoom].password;
+    if (pw === correctPw) {
       onLogin(selectedRoom);
     } else {
       setError("パスワードが正しくありません");
