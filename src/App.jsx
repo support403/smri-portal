@@ -14,6 +14,7 @@ const C = {
   warning: "#b45309",
   warningBg: "#fef3e2",
   danger: "#c0392b",
+  dangerBg: "#fdf2f2",
 };
 
 const MOCK_CONFIG = {
@@ -642,10 +643,9 @@ function Card({ children, style }) {
   );
 }
 
-function CardHeader({ icon, title }) {
+function CardHeader({ title }) {
   return (
-    <div style={{ padding: "16px 20px", borderBottom: "1px solid " + C.border, display: "flex", alignItems: "center", gap: 10 }}>
-      <span style={{ fontSize: 18 }}>{icon}</span>
+    <div style={{ padding: "16px 20px", borderBottom: "1px solid " + C.border }}>
       <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>{title}</span>
     </div>
   );
@@ -918,27 +918,70 @@ function Toast({ message, visible }) {
 function AdminPanel({ onLogout }) {
   const [config, setConfig] = useState(initialConfig);
   const [toast, setToast] = useState({ visible: false, message: "" });
+  const [loading, setLoading] = useState(true);
+
+  // 起動時にサーバーから設定を読み込む
+  useEffect(() => {
+    fetch("/.netlify/functions/config")
+      .then(r => r.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          setConfig(prev => ({
+            ...prev,
+            ...data,
+            rooms: { ...prev.rooms, ...(data.rooms || {}) },
+            fixedUrls: { ...prev.fixedUrls, ...(data.fixedUrls || {}) },
+          }));
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   function showToast(msg) {
     setToast({ visible: true, message: msg });
     setTimeout(() => setToast({ visible: false, message: "" }), 2500);
   }
 
+  async function saveToServer(newConfig) {
+    try {
+      await fetch("/.netlify/functions/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newConfig),
+      });
+    } catch(e) {
+      console.error("保存エラー", e);
+    }
+  }
+
   function handlePhaseToggle() {
     const newPhase = config.phase === "pre" ? "post" : "pre";
-    setConfig(c => ({ ...c, phase: newPhase }));
+    const newConfig = { ...config, phase: newPhase };
+    setConfig(newConfig);
+    saveToServer(newConfig);
     showToast(newPhase === "post" ? "「初日以降」フェーズに切り替えました" : "「事前期間」フェーズに戻しました");
   }
 
   function handleFixedSave(data) {
-    setConfig(c => ({ ...c, fixedUrls: data }));
+    const newConfig = { ...config, fixedUrls: data };
+    setConfig(newConfig);
+    saveToServer(newConfig);
     showToast("固定フォームのURLを保存しました");
   }
 
   function handleRoomSave(roomKey, data) {
-    setConfig(c => ({ ...c, rooms: { ...c.rooms, [roomKey]: data } }));
+    const newConfig = { ...config, rooms: { ...config.rooms, [roomKey]: data } };
+    setConfig(newConfig);
+    saveToServer(newConfig);
     showToast(data.label + "の設定を保存しました");
   }
+
+  if (loading) return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", color: C.muted, fontSize: 14 }}>
+      読み込み中...
+    </div>
+  );
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "sans-serif", color: C.text }}>
@@ -968,11 +1011,11 @@ function AdminPanel({ onLogout }) {
         <PhaseCard phase={config.phase} onToggle={handlePhaseToggle} />
 
         {/* 固定URL */}
-        <SectionLabel>🔗 固定フォーム設定</SectionLabel>
+        <SectionLabel>固定フォーム設定</SectionLabel>
         <FixedUrlCard data={config.fixedUrls} onSave={handleFixedSave} />
 
         {/* ルーム */}
-        <SectionLabel>🔑 ルーム設定（毎月更新）</SectionLabel>
+        <SectionLabel>ルーム設定（毎月更新）</SectionLabel>
         {Object.entries(config.rooms).map(([key, room]) => (
           <RoomCard key={key} roomKey={key} room={room} onSave={handleRoomSave} />
         ))}
