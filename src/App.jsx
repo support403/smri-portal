@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const C = {
   navy: "#1a2744",
@@ -17,7 +17,7 @@ const C = {
 };
 
 const MOCK_CONFIG = {
-  phase: "post",
+  phase: "pre",
   fixedUrls: {
     ndaForm: "https://forms.google.com/nda",
     practicePointForm: "https://forms.google.com/point",
@@ -27,7 +27,6 @@ const MOCK_CONFIG = {
     reportFormat: "#",
     aiSlide: "#",
     proposalBot: "#",
-    minutesBox: "#",
   },
   rooms: {
     tokyo: { label: "東京会場", password: "tokyo-2026", submissionUrl: "#", masterSheetUrl: "#" },
@@ -335,7 +334,7 @@ function Portal({ roomKey, onLogout }) {
   var [configLoaded, setConfigLoaded] = useState(false);
 
   // 起動時にサーバーから設定を読み込む
-  useState(() => {
+  useEffect(() => {
     fetch("/api/config")
       .then(r => r.json())
       .then(data => {
@@ -541,7 +540,7 @@ function Portal({ roomKey, onLogout }) {
                   <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>初回レビュー時の提案骨子</p>
                   <p style={{ fontSize: 12, color: C.muted, margin: 0 }}>ダウンロード資料</p>
                 </div>
-                <Btn href="#" variant="white" small>ダウンロード <Arrow /></Btn>
+                <Btn href={config.fixedUrls.proposalBoneUrl || "#"} variant="white" small>ダウンロード <Arrow /></Btn>
               </div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "11px 14px", border: "1px solid " + C.border, borderRadius: 9, gap: 10 }}>
                 <div>
@@ -582,7 +581,6 @@ const initialConfig = {
     reportFormat: "",
     aiSlide: "",
     proposalBot: "",
-    minutesBox: "",
   },
   rooms: {
     tokyo: {
@@ -590,6 +588,7 @@ const initialConfig = {
       password: "",
       submissionUrl: "",
       masterSheetUrl: "",
+      minutesUrl: "",
     },
     local: {
       label: "地方会場",
@@ -597,12 +596,14 @@ const initialConfig = {
       password: "",
       submissionUrl: "",
       masterSheetUrl: "",
+      minutesUrl: "",
     },
     online: {
       label: "オンライン",
       password: "",
       submissionUrl: "",
       masterSheetUrl: "",
+      minutesUrl: "",
     },
   },
 };
@@ -729,7 +730,7 @@ function PhaseCard({ phase, onToggle }) {
 function FixedUrlCard({ data, onSave }) {
   const [d, setD] = useState({ ...data });
   const [saved, setSaved] = useState(false);
-  const [openSection, setOpenSection] = useState(null);
+  const [openSections, setOpenSections] = useState({});
   const set = (key, val) => setD(prev => ({ ...prev, [key]: val }));
 
   function handleSave() {
@@ -739,11 +740,11 @@ function FixedUrlCard({ data, onSave }) {
   }
 
   function Section({ id, title, children }) {
-    const open = openSection === id;
+    const open = openSections[id] || false;
     return (
       <div style={{ borderBottom: "1px solid " + C.border }}>
         <button
-          onClick={function() { setOpenSection(open ? null : id); }}
+          onClick={function() { setOpenSections(function(prev) { return Object.assign({}, prev, { [id]: !prev[id] }); }); }}
           style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}
         >
           <span style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{title}</span>
@@ -867,6 +868,9 @@ function RoomCard({ roomKey, room, onSave }) {
           </p>
           <Field label="マスタースプレッドシート URL">
             <Input value={d.masterSheetUrl || ""} onChange={e => set("masterSheetUrl", e.target.value)} placeholder="https://docs.google.com/spreadsheets/..." />
+          </Field>
+          <Field label="事業者情報・議事録等 URL（Drive）">
+            <Input value={d.minutesUrl || ""} onChange={e => set("minutesUrl", e.target.value)} placeholder="https://drive.google.com/..." />
           </Field>
           <Field label="最終レポート投函BOX URL">
             <Input value={d.submissionUrl} onChange={e => set("submissionUrl", e.target.value)} placeholder="https://drive.google.com/..." />
