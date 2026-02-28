@@ -335,7 +335,7 @@ function Portal({ roomKey, onLogout }) {
 
   // 起動時にサーバーから設定を読み込む
   useEffect(() => {
-    fetch("/api/config")
+    fetch("/.netlify/functions/config")
       .then(r => r.json())
       .then(data => {
         if (data && Object.keys(data).length > 0) {
@@ -540,7 +540,14 @@ function Portal({ roomKey, onLogout }) {
                   <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>初回レビュー時の提案骨子</p>
                   <p style={{ fontSize: 12, color: C.muted, margin: 0 }}>ダウンロード資料</p>
                 </div>
-                <Btn href={config.fixedUrls.proposalBoneUrl || "#"} variant="white" small>ダウンロード <Arrow /></Btn>
+                <Btn href={config.fixedUrls.proposalBoneUrl || "#"} variant="white" small>開く <Arrow /></Btn>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "11px 14px", border: "1px solid " + C.border, borderRadius: 9, gap: 10, marginBottom: 8 }}>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>レポート見本（8種）</p>
+                  <p style={{ fontSize: 12, color: C.muted, margin: 0 }}>参考資料</p>
+                </div>
+                <Btn href={config.fixedUrls.reportSamples || "#"} variant="white" small>開く <Arrow /></Btn>
               </div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "11px 14px", border: "1px solid " + C.border, borderRadius: 9, gap: 10 }}>
                 <div>
@@ -798,8 +805,8 @@ function FixedUrlCard({ data, onSave }) {
               <Input value={d.proposalBot || ""} onChange={e => set("proposalBot", e.target.value)} placeholder="https://..." />
             </Field>
           </FieldRow>
-          <Field label="事業者情報・議事録等 URL（Drive）">
-            <Input value={d.minutesBox || ""} onChange={e => set("minutesBox", e.target.value)} placeholder="https://drive.google.com/..." />
+          <Field label="初回レビュー時の提案骨子 URL">
+            <Input value={d.proposalBoneUrl || ""} onChange={e => set("proposalBoneUrl", e.target.value)} placeholder="https://drive.google.com/..." />
           </Field>
         </Section>
 

@@ -1,32 +1,50 @@
-import { getStore } from "@netlify/blobs";
+const { getStore } = require("@netlify/blobs");
 
-export default async (req, context) => {
-  const store = getStore("smri-config");
+exports.handler = async function (event, context) {
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+  };
+
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 200, headers, body: "" };
+  }
+
+  const store = getStore({ name: "smri-config", consistency: "strong" });
 
   // GET: 設定を読み込む
-  if (req.method === "GET") {
+  if (event.httpMethod === "GET") {
     try {
       const data = await store.get("config", { type: "json" });
-      return Response.json(data || {});
-    } catch {
-      return Response.json({});
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(data || {}),
+      };
+    } catch (e) {
+      return { statusCode: 200, headers, body: JSON.stringify({}) };
     }
   }
 
   // POST: 設定を保存する
-  if (req.method === "POST") {
+  if (event.httpMethod === "POST") {
     try {
-      const body = await req.json();
+      const body = JSON.parse(event.body);
       await store.set("config", JSON.stringify(body));
-      return Response.json({ ok: true });
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ ok: true }),
+      };
     } catch (e) {
-      return Response.json({ ok: false, error: e.message }, { status: 500 });
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ ok: false, error: e.message }),
+      };
     }
   }
 
-  return Response.json({ error: "Method not allowed" }, { status: 405 });
-};
-
-export const config = {
-  path: "/api/config",
+  return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
 };
