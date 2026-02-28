@@ -40,7 +40,7 @@ const VIDEOS = [
   {
     id: "v1", title: "実務従事マインドセット", instructor: "伊勢田",
     chapters: [
-      { title: "試験で高得点≒実務で高成果", url: "https://youtu.be/TwQogFMcQpA" },
+      { title: "試験で高得点≠実務で高成果", url: "https://youtu.be/TwQogFMcQpA" },
       { title: "支援先以上の専門家になれるか", url: "https://youtu.be/hGfgO79MJ5I" },
       { title: "良質な提案に繋がるヒアリングができるか", url: "https://youtu.be/Jl46TIqQWto" },
       { title: "「今日から何する」が具体的にわかる提案か", url: "https://youtu.be/JbctnbdxQD8" },
@@ -302,12 +302,22 @@ function VideoCard({ video, watched, onToggle, config }) {
 
   return (
     <div style={{ border: "1px solid " + (allDone ? "#a8ddc0" : C.border), borderRadius: 10, overflow: "hidden", background: allDone ? "#f4fbf7" : C.white, marginBottom: 10 }}>
+      {video.thumbnail && (
+        <div style={{ position: "relative" }}>
+          <img src={video.thumbnail} alt={video.title} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block" }} />
+          {allDone && (
+            <div style={{ position: "absolute", top: 8, right: 8, background: C.success, borderRadius: "50%", width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+          )}
+        </div>
+      )}
       <div style={{ padding: "12px 14px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid " + (allDone ? "#c8ecd8" : C.border) }}>
         <div style={{ flex: 1 }}>
           <p style={{ fontSize: 14, fontWeight: 700, margin: 0, color: C.text }}>{video.title}</p>
           <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0" }}>講師：{video.instructor}　{doneCount}/{video.chapters.length} 完了</p>
         </div>
-        {allDone && (
+        {allDone && !video.thumbnail && (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill={C.success}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         )}
       </div>
@@ -578,7 +588,7 @@ function Portal({ roomKey, onLogout }) {
             </Toggle>
 
             <Toggle title="最終レポート投函BOX" locked={!isPost} accentLeft={isPost}>
-              <p style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>完成したレポート・スライドを提出してください。ファイル名に氏名を記入してください。（例）001_氏名_テーマ内容</p>
+              <p style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>完成したレポート・スライドをPDFで提出してください。ファイル名に氏名を記入してください。（例）001_氏名_テーマ内容</p>
               <Btn href={room.submissionUrl} variant="primary">投函BOXを開く <Arrow /></Btn>
             </Toggle>
 
