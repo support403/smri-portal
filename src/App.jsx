@@ -808,6 +808,9 @@ function FixedUrlCard({ data, onSave }) {
           <Field label="初回レビュー時の提案骨子 URL">
             <Input value={d.proposalBoneUrl || ""} onChange={e => set("proposalBoneUrl", e.target.value)} placeholder="https://drive.google.com/..." />
           </Field>
+          <Field label="レポート見本（8種）URL">
+            <Input value={d.reportSamples || ""} onChange={e => set("reportSamples", e.target.value)} placeholder="https://drive.google.com/..." />
+          </Field>
         </Section>
 
       </div>
@@ -896,11 +899,11 @@ function RoomCard({ roomKey, room, onSave }) {
 // トースト
 // ============================================================
 function Toast({ message, visible }) {
+  if (!visible) return null;
   return (
     <div style={{
       position: "fixed", bottom: 32, left: "50%",
-      transform: "translateX(-50%) translateY(" + visible ? 0 : 80 + "px)",
-      transition: "transform 0.3s ease",
+      transform: "translateX(-50%)",
       background: C.navy, color: C.white,
       padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 600,
       boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 9999,
