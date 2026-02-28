@@ -391,17 +391,17 @@ function Portal({ roomKey, onLogout }) {
 
       {/* ヘッダー */}
       <div style={{ background: C.white, borderBottom: "3px solid " + C.navy, position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(26,39,68,0.08)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <LogoSvg height={30} />
-            <div style={{ borderLeft: "1px solid " + C.border, paddingLeft: 16 }}>
-              <p style={{ fontSize: 11, color: C.muted, margin: 0, lineHeight: 1 }}>実務従事プログラム</p>
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.navy, margin: "3px 0 0", lineHeight: 1 }}>経営支援実務研修</p>
+        <div style={{ padding: "0 12px", height: 52, display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}>
+            <LogoSvg height={22} />
+            <div style={{ borderLeft: "1px solid " + C.border, paddingLeft: 8, minWidth: 0 }}>
+              <p style={{ fontSize: 9, color: C.muted, margin: 0, lineHeight: 1, whiteSpace: "nowrap" }}>実務従事プログラム</p>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.navy, margin: "2px 0 0", lineHeight: 1, whiteSpace: "nowrap" }}>経営支援実務研修</p>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: 12, color: C.navy, background: C.navyLight, padding: "4px 12px", borderRadius: 20, fontWeight: 600 }}>{roomLabel}</span>
-            <button onClick={onLogout} style={{ background: "none", border: "1px solid " + C.border, color: C.muted, borderRadius: 6, padding: "5px 12px", fontSize: 12, cursor: "pointer", fontFamily: "sans-serif" }}>退室</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+            <span style={{ fontSize: 11, color: C.navy, background: C.navyLight, padding: "3px 8px", borderRadius: 20, fontWeight: 600, whiteSpace: "nowrap" }}>{roomLabel}</span>
+            <button onClick={onLogout} style={{ background: "none", border: "1px solid " + C.border, color: C.muted, borderRadius: 6, padding: "4px 8px", fontSize: 11, cursor: "pointer", fontFamily: "sans-serif", whiteSpace: "nowrap" }}>退室</button>
           </div>
         </div>
       </div>
@@ -425,7 +425,7 @@ function Portal({ roomKey, onLogout }) {
         </div>
 
         {/* 2カラム */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 16, alignItems: "start" }}>
 
           {/* 左カラム */}
           <div>
